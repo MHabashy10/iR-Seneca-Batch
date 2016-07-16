@@ -1,0 +1,28 @@
+{
+  "name": "ir-seneca-bat",
+  "version": "0.0.0",
+  "description": "IR Batch process repo using Seneca",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "Mohamed Habashy",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "body-parser": "~1.15.1",
+    "cloudinary": "^1.4.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "firebase": "^2.4.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "request-promise": "^3.0.0",
+    "seneca": "^2.1.0",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.4"
+  }
+}

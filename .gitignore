@@ -1,0 +1,9 @@
+
+.idea/
+.vscode/
+node_modules/
+.env
+public/libs/
+.eslintrc.json
+jsconfig.json
+
