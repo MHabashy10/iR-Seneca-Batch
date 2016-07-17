@@ -2,6 +2,8 @@
 .idea/
 .vscode/
 node_modules/
+coverage/
+spec/support/
 .env
 public/libs/
 .eslintrc.json

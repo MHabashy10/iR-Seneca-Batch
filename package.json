@@ -4,7 +4,10 @@
   "description": "IR Batch process repo using Seneca",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "jasmine-node spec --autotest --watch .",
+    "coverage": "istanbul cover  node_modules/jasmine/bin/jasmine.js"
+	
   },
   "author": "Mohamed Habashy",
   "dependencies": {
@@ -23,6 +26,7 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "istanbul": "^0.4.4"
+    "istanbul": "^0.4.4",
+    "jasmine": "^2.4.1"
   }
 }
