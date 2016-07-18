@@ -10,8 +10,12 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var helmet = require('helmet')
+
 var app = express();
 
+// Helmet helps you secure your Express apps by setting various HTTP headers.
+app.use(helmet())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
