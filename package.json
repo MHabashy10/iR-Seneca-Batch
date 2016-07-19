@@ -7,7 +7,6 @@
     "start": "node ./bin/www",
     "test": "jasmine-node spec --autotest --watch .",
     "coverage": "istanbul cover  node_modules/jasmine/bin/jasmine.js"
-	
   },
   "author": "Mohamed Habashy",
   "dependencies": {
@@ -19,11 +18,13 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "firebase": "^2.4.0",
+    "helmet": "^2.1.1",
     "jade": "~1.11.0",
     "morgan": "~1.7.0",
     "request-promise": "^3.0.0",
     "seneca": "^2.1.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "istanbul": "^0.4.4",
