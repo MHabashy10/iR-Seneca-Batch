@@ -1,3 +1,7 @@
+/* 
+    Created by Mohamed Habashy
+ */
+
 var express = require('express');
 var router = express.Router();
 var seneca = require('seneca')({
@@ -18,12 +22,16 @@ router.get('/', function (req, res, next) {
 
 router.get('/cloudinary', function (req, res, next) {
 
-  seneca.pact({ role: 'cloudinary', cmd: 'clean', type: 'image' }).then(
-    // Log the fulfillment value
-    function (val) {
-      console.log(val.length);
+  seneca.pact({ role: 'cloudinary', cmd: 'fetch', type: 'image' }).then(function (val) {
+       // Log the fulfillment value
+      //console.log(val.length);
+      // compare with the already used media
+    return  seneca.pact({ role: 'fb', cmd: 'compare', type: 'image', media: val })
+      .then(function (count) {
 
-      res.status(200).json({ size: val.length, images: val });
+        res.status(200).json({ count: count, images: val });
+      })
+
 
     }).
     catch(
