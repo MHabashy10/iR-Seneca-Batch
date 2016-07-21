@@ -68,14 +68,14 @@ module.exports = function () {
         // }
 
 
-
+        // we should look for the publid_id which is not used anymore
         fb.child(mediaType).orderByChild('media').once("value").then(function (mediaSnaps) {
             count.total = args.media.length;
-           count.exist = _.filter(args.media, function (media) {
+           count.not = _.filter(args.media, function (media) {
 
-                return! _.isEmpty( _.where(_.toArray(mediaSnaps.val()), { media: media.public_id }));
+                return _.isEmpty( _.where(_.toArray(mediaSnaps.val()), { media: media.public_id }));
             });
-            count.not =  count.total -  count.exist.length;
+            count.exist =  count.total -  count.not.length;
              done(null, count);
 
         });

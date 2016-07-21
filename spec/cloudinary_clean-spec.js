@@ -25,7 +25,7 @@ describe("Cloudinary Clean", function () {
         expect(response.statusCode).toBe(200);
 
         done();
-      });
+      },2000);
     });
 
     it("Get /cloudinary should returns status code 200 & images >= 3359", function (done) {
