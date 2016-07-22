@@ -28,6 +28,14 @@ describe("Cloudinary Clean", function () {
       },2000);
     });
 
+    it("Get /anything should returns status code 404", function (done) {
+      request.get(base_url+'anything', function (error, response, body) {
+        expect(response.statusCode).toBe(404);
+
+        done();
+      },2000);
+    });
+
     it("Get /cloudinary should returns status code 200 & images >= 3359", function (done) {
       request.get(base_url + 'cloudinary', function (error, response, body) {
 

@@ -29,13 +29,11 @@ module.exports = function () {
             if (result.next_cursor) {
                 // if next_crusor is available this means
                 // that their is still more data
-                // so we chain call this function
-                setTimeout(function name(params) {
-                    find_Item({
-                        type: args.type,
-                        next_cursor: result.next_cursor
-                    }, done);
-                }, 0);
+                // so we chain call this function       
+                find_Item({
+                    type: args.type,
+                    next_cursor: result.next_cursor
+                }, done);
 
             } else {
                 // to empty data var so we don't just add to this global var
@@ -59,42 +57,62 @@ module.exports = function () {
             exist: 0,
             not: 0,
             total: 0
-        }
+        };
         var mediaType = (args.type == 'image') ? 'photos' : 'videos';
 
         // for (var i = 0; i < args.media.length; i++) {
+        if (args.type == 'image') {
+            // if image add the users and studioes avatar
+            promises.push(fb.child('users').orderByChild('avatar').once("value"));
+             promises.push(fb.child('studios').orderByChild('logo').once("value"));
+        }
 
-        //     promises.push(fb.child(mediaType).orderByChild('media').equalTo(args.media[i].public_id).once("value"));
         // }
 
 
         // we should look for the publid_id which is not used anymore
-        fb.child(mediaType).orderByChild('media').once("value").then(function (mediaSnaps) {
-            count.total = args.media.length;
-           count.not = _.filter(args.media, function (media) {
+        promises.push( fb.child(mediaType).orderByChild('media').once("value"));
+           
+  var allMedia = [];
+        Promise.all(promises).then(function (mediaSnaps) {
+            //     count.total = mediaSnaps.length;
 
-                return _.isEmpty( _.where(_.toArray(mediaSnaps.val()), { media: media.public_id }));
+            //     for (var i = 0; i < mediaSnaps.length; i++) {
+            //         if (mediaSnaps[i].exists()) {
+            //             ++count.exist;
+            //         } else {
+            //             ++count.not;
+
+            //         }
+            //     }
+          
+
+             if (args.type == 'image') {
+                 // combine stage 
+                   for (var i = 0; i < mediaSnaps.length; i++) {
+                         for (var j = 0; j < _.toArray(mediaSnaps[i].val()).length; j++) {
+                             var media = _.toArray(mediaSnaps[i].val()) ;
+                             allMedia.push({media : media[j].media|| media[j].logo|| media[j].avatar});
+
+                         }
+
+                   }
+
+
+             } else {
+                allMedia = mediaSnaps[0].val();
+             }
+            // ... perform item creation  
+            count.total = args.media.length;
+            count.not = _.filter(args.media, function (media) {
+
+                return _.isEmpty(_.where(_.toArray(allMedia), { media: media.public_id }));
             });
-            count.exist =  count.total -  count.not.length;
-             done(null, count);
+            count.exist = count.total - count.not.length;
+            done(null, count);
+
 
         });
-
-        // Promise.all(promises).then(function (mediaSnaps) {
-        //     count.total = mediaSnaps.length;
-
-        //     for (var i = 0; i < mediaSnaps.length; i++) {
-        //         if (mediaSnaps[i].exists()) {
-        //             ++count.exist;
-        //         } else {
-        //             ++count.not;
-
-        //         }
-        //     }
-        // ... perform item creation
-       
-
-        //   })
 
     }
 };
