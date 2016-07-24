@@ -4,7 +4,7 @@
 
 //var cloudinary = require('cloudinary');
 
-
+"use strict";
 
 module.exports = function () {
     var seneca = this;
@@ -53,6 +53,7 @@ module.exports = function () {
 
     function compare_items(args, done) {
         var promises = [];
+        var allMedia = [];
         var count = {
             exist: 0,
             not: 0,
@@ -64,16 +65,21 @@ module.exports = function () {
         if (args.type == 'image') {
             // if image add the users and studioes avatar
             promises.push(fb.child('users').orderByChild('avatar').once("value"));
-             promises.push(fb.child('studios').orderByChild('logo').once("value"));
+            promises.push(fb.child('studios').orderByChild('logo').once("value"));
+
+            // adding default media missing_profile
+            allMedia.push({ media: 'missing_profile' });
+      
+
         }
 
         // }
 
 
         // we should look for the publid_id which is not used anymore
-        promises.push( fb.child(mediaType).orderByChild('media').once("value"));
-           
-  var allMedia = [];
+        promises.push(fb.child(mediaType).orderByChild('media').once("value"));
+
+
         Promise.all(promises).then(function (mediaSnaps) {
             //     count.total = mediaSnaps.length;
 
@@ -85,27 +91,30 @@ module.exports = function () {
 
             //         }
             //     }
-          
-
-             if (args.type == 'image') {
-                 // combine stage 
-                   for (var i = 0; i < mediaSnaps.length; i++) {
-                         for (var j = 0; j < _.toArray(mediaSnaps[i].val()).length; j++) {
-                             var media = _.toArray(mediaSnaps[i].val()) ;
-                             allMedia.push({media : media[j].media|| media[j].logo|| media[j].avatar});
-
-                         }
-
-                   }
 
 
-             } else {
+            if (args.type == 'image') {
+
+                // combine stage 
+                for (var i = 0; i < mediaSnaps.length; i++) {
+                    for (var j = 0; j < _.toArray(mediaSnaps[i].val()).length; j++) {
+                        var media = _.toArray(mediaSnaps[i].val());
+                        allMedia.push({ media: media[j].media || media[j].avatar || media[j].settings.logo });
+
+                    }
+
+                }
+
+
+
+
+            } else {
                 allMedia = mediaSnaps[0].val();
-             }
+            }
             // ... perform item creation  
             count.total = args.media.length;
             count.not = _.filter(args.media, function (media) {
-
+                if (media.public_id.includes('iRehearse/')) return false;
                 return _.isEmpty(_.where(_.toArray(allMedia), { media: media.public_id }));
             });
             count.exist = count.total - count.not.length;
