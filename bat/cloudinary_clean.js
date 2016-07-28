@@ -18,6 +18,11 @@ module.exports = function () {
         role: 'cloudinary',
         cmd: 'fetch'
     }, find_Item);
+
+    seneca.add({
+        role: 'cloudinary',
+        cmd: 'delete'
+    }, delete_Item);
     // ... other action definitions
 
     function find_Item(args, done) {
@@ -69,7 +74,7 @@ module.exports = function () {
 
             // adding default media missing_profile
             allMedia.push({ media: 'missing_profile' });
-      
+
 
         }
 
@@ -113,15 +118,49 @@ module.exports = function () {
             }
             // ... perform item creation  
             count.total = args.media.length;
-            count.not = _.filter(args.media, function (media) {
+            // retun only the public_ids 
+            count.not = _.pluck(_.filter(args.media, function (media) {
+                // exclude  website media under iRehearse/screenshots && iRehearse/
                 if (media.public_id.includes('iRehearse/')) return false;
                 return _.isEmpty(_.where(_.toArray(allMedia), { media: media.public_id }));
-            });
+            }), 'public_id');
             count.exist = count.total - count.not.length;
             done(null, count);
 
 
         });
+
+    }
+
+    function delete_Item(args, done) {
+
+
+        cloudinary.api.delete_resources(args.public_ids, function (result) {
+
+            if (result.next_cursor) {
+                // if next_crusor is available this means
+                // that their is still more data to be deleted
+                // so we chain call this function       
+                delete_Item({
+                    //   public_ids : args.public_ids,
+                    next_cursor: result.next_cursor
+                }, done);
+
+            } else {
+                // to empty data var so we don't just add to this global var
+                var all = result;
+
+                done(null, all);
+            }
+
+        }, {
+
+                next_cursor: args.next_cursor,
+                all : true,
+                //keep_original: true
+
+            });
+
 
     }
 };
