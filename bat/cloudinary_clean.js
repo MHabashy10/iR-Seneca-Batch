@@ -147,10 +147,8 @@ module.exports = function () {
                 }, done);
 
             } else {
-                // to empty data var so we don't just add to this global var
-                var all = result;
-
-                done(null, all);
+               
+                done(null,  result.deleted);
             }
 
         }, {

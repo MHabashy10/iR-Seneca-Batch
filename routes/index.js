@@ -29,7 +29,12 @@ router.get('/cloudinary', function (req, res, next) {
     return  seneca.pact({ role: 'fb', cmd: 'compare', type: type, media: val })
       .then(function (count) {
 
-        res.status(200).json({ count: count, images: val });
+ return  seneca.pact({ role: 'cloudinary', cmd: 'delete', public_ids: count.not })
+      .then(function (deleted) {
+
+        res.status(200).json({ deleted:{deleted:deleted, delete_count:_.pairs (deleted).length}, count: count, medias: val });
+      });
+      //  res.status(200).json({ count: count, images: val });
       });
 
 
