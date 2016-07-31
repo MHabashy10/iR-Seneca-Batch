@@ -21,7 +21,7 @@ seneca = require('seneca')({
       { pin: ' role: cloudinary' }
       ] ,
       // required to be detect the base
-    bases: ['127.0.0.1:3000','mohamed.irehearse.com']
+    bases: ['127.0.0.1:39001','mohamed.irehearse.com:39001']
     //host: 'q3.my-domain.com'
   });
 
