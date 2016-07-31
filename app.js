@@ -13,23 +13,56 @@ var users = require('./routes/users');
 var helmet = require('helmet');
 
 var Promise = require('bluebird');
+
+// using watchdog to rejoin the mesh network on disconnect
+var watchout = require('watchout');
+
+var watchdog = new watchout(12000, function(haltedTimeout){
+    console.log('I should execute much later.');
+    //rocess.exit(1);
+// rejoin forever :D
+   seneca .use('mesh',
+  {
+    listen: [
+      { pin: 'role: cloudinary' },
+     {pin: 'role:system,cmd:watchdog', model:'observe'} 
+    ],
+    // required to be detect the base 39999 is the default port
+    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
+    //  host: 'ir-seneca-batch.herokuapp.com'
+  });
+
+})
+
 seneca = require('seneca')({
-  timeout: 10000,
+  timeout: 30000,
   tag: 'batch',
   // transport: {host: '46.137.168.242'}
 }).use('mesh',
   {
     listen: [
-      {
-        pin: ' role: cloudinary',
-      }
+      { pin: 'role: cloudinary' },
+     {pin: 'role:system,cmd:watchdog', model:'observe'} 
     ],
     // required to be detect the base 39999 is the default port
-    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:39999'],
+    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
     //  host: 'ir-seneca-batch.herokuapp.com'
   });
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
+
+// first reset it before running 
+setTimeout(function(){
+  watchdog.reset();
+},3000);
+
+seneca.add({role: 'system',cmd: 'watchdog' }, function(args, done){
+  // when comes from the server reset the watchdog
+  watchdog.reset();
+  console.log("done reset");
+    done(null,{"cloudinary":this.id});
+
+});
 
 seneca.use('../bat/cloudinary_clean.js');
 
