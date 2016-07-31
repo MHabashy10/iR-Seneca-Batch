@@ -14,7 +14,9 @@ var helmet = require('helmet');
 
 var Promise = require('bluebird');
 seneca = require('seneca')({
-  timeout: 500000
+  timeout: 10000,
+  tag:'batch',
+  transport: {host: '46.137.168.242'}
 });
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
