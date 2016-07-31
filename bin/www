@@ -27,11 +27,13 @@ var base = baseSnap.val();
   {
       auto:true,
     listen: [
-      { pin: ' role: cloudinary', host: 'ir-seneca-batch.herokuapp.com'}
+      { pin: ' role: cloudinary', 
+      //host: 'ir-seneca-batch.herokuapp.com'
+    }
       ] ,
       // required to be detect the base
-    bases: ['127.0.0.1:3000','irehearse-habashy.herokuapp.com:3999'],
-    host: 'ir-seneca-batch.herokuapp.com'
+    bases: ['127.0.0.1:39999','irehearse-habashy.herokuapp.com:3999'],
+  //  host: 'ir-seneca-batch.herokuapp.com'
   })
 });
    

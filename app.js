@@ -16,7 +16,7 @@ var Promise = require('bluebird');
 seneca = require('seneca')({
   timeout: 10000,
   tag:'batch',
-  transport: {host: '46.137.168.242'}
+ // transport: {host: '46.137.168.242'}
 });
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
