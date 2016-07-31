@@ -32,7 +32,7 @@ var base = baseSnap.val();
     }
       ] ,
       // required to be detect the base
-    bases: ['127.0.0.1:39999','irehearse-habashy.herokuapp.com:3999'],
+    bases: ['127.0.0.1:39999','irehearse-habashy.herokuapp.com:39999'],
   //  host: 'ir-seneca-batch.herokuapp.com'
   })
 });
