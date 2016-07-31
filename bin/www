@@ -20,6 +20,7 @@ fb.authWithCustomToken(process.env.firebase_secret, function(error, authData) {
   } else {
     console.log("Login Succeeded!", authData);
     //get the port from the base set at fb
+    /*
 fb.child('seneca').child('base').on('value', function(baseSnap) {
   // code to handle new value.
 var base = baseSnap.val();
@@ -36,6 +37,7 @@ var base = baseSnap.val();
   //  host: 'ir-seneca-batch.herokuapp.com'
   })
 });
+*/
    
   }
 });

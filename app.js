@@ -15,9 +15,19 @@ var helmet = require('helmet');
 var Promise = require('bluebird');
 seneca = require('seneca')({
   timeout: 10000,
-  tag:'batch',
- // transport: {host: '46.137.168.242'}
-});
+  tag: 'batch',
+  // transport: {host: '46.137.168.242'}
+}).use('mesh',
+  {
+    listen: [
+      {
+        pin: ' role: cloudinary',
+      }
+    ],
+    // required to be detect the base 39999 is the default port
+    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:39999'],
+    //  host: 'ir-seneca-batch.herokuapp.com'
+  });
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
 
