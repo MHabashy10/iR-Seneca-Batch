@@ -15,15 +15,7 @@ var helmet = require('helmet');
 var Promise = require('bluebird');
 seneca = require('seneca')({
   timeout: 500000
-}).use('mesh',
-  {
-    listen: [
-      { pin: ' role: cloudinary' }
-      ] ,
-      // required to be detect the base
-    bases: ['127.0.0.1:39001','mohamed.irehearse.com:39001']
-    //host: 'q3.my-domain.com'
-  });
+});
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
 

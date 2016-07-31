@@ -19,6 +19,21 @@ fb.authWithCustomToken(process.env.firebase_secret, function(error, authData) {
     console.log("Login Failed!", error);
   } else {
     console.log("Login Succeeded!", authData);
+    //get the port from the base set at fb
+fb.child('seneca').child('base').on('value', function(baseSnap) {
+  // code to handle new value.
+var base = baseSnap.val();
+  seneca .use('mesh',
+  {
+    listen: [
+      { pin: ' role: cloudinary' }
+      ] ,
+      // required to be detect the base
+    bases: ['127.0.0.1:3000',base.host+":"+base.port]
+    //host: 'q3.my-domain.com'
+  })
+});
+   
   }
 });
 
