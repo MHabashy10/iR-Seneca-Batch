@@ -10,12 +10,30 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-var helmet = require('helmet')
+var helmet = require('helmet');
+
+
+seneca = require('seneca')({
+  timeout: 500000
+}).use('mesh',
+  {
+    listen: [
+      { pin: ' role: cloudinary' }
+      ]
+      //,
+    //bases: ['q1.my-domain:40000'], 
+    //host: 'q3.my-domain.com'
+  });
+
+seneca.pact = Promise.promisify(seneca.act, { context: seneca });
+
+seneca.use('../bat/cloudinary_clean.js');
+
 
 var app = express();
 
 // Helmet helps you secure your Express apps by setting various HTTP headers.
-app.use(helmet())
+app.use(helmet());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -32,7 +50,7 @@ app.use('/', routes);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -43,7 +61,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -54,7 +72,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
