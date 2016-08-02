@@ -4,14 +4,8 @@
 
 var express = require('express');
 var router = express.Router();
-var seneca = require('seneca')({
-  timeout: 500000
-});
+
 var Promise = require('bluebird');
-
-seneca.pact = Promise.promisify(seneca.act, { context: seneca });
-
-seneca.use('../bat/cloudinary_clean.js');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
