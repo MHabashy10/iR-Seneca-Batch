@@ -21,33 +21,47 @@ var watchdog = new watchout(12000, function(haltedTimeout){
     console.log('I should execute much later.');
     //rocess.exit(1);
 // rejoin forever :D
-   seneca .use('mesh',
-  {
-    listen: [
-      { pin: 'role: cloudinary' },
-     {pin: 'role:system,cmd:watchdog', model:'observe'} 
-    ],
-    // required to be detect the base 39999 is the default port
-    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
-    //  host: 'ir-seneca-batch.herokuapp.com'
-  });
+  //  seneca  .use('redis-transport').use('mesh',
+  // {
+  //   listen: [
+  //     { pin: 'role: cloudinary' },
+  //       {model:'observe', type:'redis',  port: 6379} 
+  //   ],
+  //   // required to be detect the base 39999 is the default port
+  //   bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
+  //   //  host: 'ir-seneca-batch.herokuapp.com'
+  // });
 
 })
 
 seneca = require('seneca')({
   timeout: 30000,
   tag: 'batch',
+  log:'test',
+    transport:{
+      redis:{
+        timeout:500,
+         url:"redis://h:pbh7cojobnk8s640c0ae3o5squ6@ec2-46-137-186-21.eu-west-1.compute.amazonaws.com:13299"
+      }
+    }
   // transport: {host: '46.137.168.242'}
-}).use('mesh',
-  {
-    listen: [
-      { pin: 'role: cloudinary' },
-     {pin: 'role:system,cmd:watchdog', model:'observe'} 
-    ],
-    // required to be detect the base 39999 is the default port
-    bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
-    //  host: 'ir-seneca-batch.herokuapp.com'
-  });
+}) .use('redis-transport',{
+     redis:{
+       url:"redis://h:pbh7cojobnk8s640c0ae3o5squ6@ec2-46-137-186-21.eu-west-1.compute.amazonaws.com:13299"
+     }
+   })
+ .client({type:'redis'})
+   .listen({type:'redis'})
+// .use('mesh',
+//   {
+//     listen: [
+//       { pin: 'role: cloudinary' },
+//       {model:'observe', type:'redis',  port: 6379} 
+//     ],
+//     // required to be detect the base 39999 is the default port
+//     bases: ['127.0.0.1:39999', 'irehearse-habashy.herokuapp.com:80'],
+//     //  host: 'ir-seneca-batch.herokuapp.com'
+//   })
 
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
 
@@ -60,10 +74,45 @@ seneca.add({role: 'system',cmd: 'watchdog' }, function(args, done){
   // when comes from the server reset the watchdog
   watchdog.reset();
   console.log("done reset");
-    done(null,{"cloudinary":this.id});
+   done(null,{"cloudinary":this.id});
+    //  seneca.pact('role:Dummy1,cmd:hello').then(function ( result) {
+          
+    //         console.log('Dummy 1 result:', result);
+
+    //           seneca.pact('role:Dummy2,cmd:hello').then( function ( result2) {
+        
+    //         console.log('Dummy 2 result:', result2);
+          
+    //     });
+    //     }).catch(function(err){
+
+    //        if (err) throw err;
+    //     });
+      
+   
 
 });
 
+
+setInterval(function(){
+seneca.pact(('role:Dummy1,cmd:hello'))
+    .then(function (live) {
+        console.log("Live Nodes: "+ JSON.stringify( live));
+    }).catch(function(err){
+
+           if (err) throw err;
+        });
+}, 5000);
+
+setInterval(function(){
+seneca.pact(('role:Dummy2,cmd:hello'))
+    .then(function (live) {
+        console.log("Live Nodes: "+ JSON.stringify( live));
+    }).catch(function(err){
+
+           if (err) throw err;
+        });
+}, 3000);
 seneca.use('../bat/cloudinary_clean.js');
 
 
