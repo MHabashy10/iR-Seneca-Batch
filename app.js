@@ -41,15 +41,11 @@ seneca = require('seneca')({
     transport:{
       redis:{
         timeout:500,
-         url:"redis://h:pbh7cojobnk8s640c0ae3o5squ6@ec2-46-137-186-21.eu-west-1.compute.amazonaws.com:13299"
+         url:process.env.REDIS_URL
       }
     }
   // transport: {host: '46.137.168.242'}
-}) .use('redis-transport',{
-     redis:{
-       url:"redis://h:pbh7cojobnk8s640c0ae3o5squ6@ec2-46-137-186-21.eu-west-1.compute.amazonaws.com:13299"
-     }
-   })
+}) .use('redis-transport')
  .client({type:'redis'})
    .listen({type:'redis'})
 // .use('mesh',
