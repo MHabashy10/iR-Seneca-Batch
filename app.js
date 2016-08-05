@@ -12,16 +12,16 @@ var users = require('./routes/users');
 
 var helmet = require('helmet');
 
-
+var Promise = require('bluebird');
 seneca = require('seneca')({
   timeout: 500000
 }).use('mesh',
   {
     listen: [
       { pin: ' role: cloudinary' }
-      ]
-      //,
-    //bases: ['q1.my-domain:40000'], 
+      ] ,
+      // required to be detect the base
+    bases: ['127.0.0.1:3000']
     //host: 'q3.my-domain.com'
   });
 
