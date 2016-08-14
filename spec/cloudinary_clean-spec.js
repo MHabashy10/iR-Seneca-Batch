@@ -44,7 +44,7 @@ describe("Cloudinary Clean", function () {
 
         expect(JSON.parse(body).count.exist.length).not.toBeGreaterThan(JSON.parse(body).count.total);
 
-        expect(JSON.parse(body).images).toBeTruthy();
+        expect(JSON.parse(body).media).toBeTruthy();
 
         done();
       });
@@ -58,7 +58,7 @@ describe("Cloudinary Clean", function () {
 
         expect(JSON.parse(body).count.exist.length).not.toBeGreaterThan(JSON.parse(body).count.total);
 
-        expect(JSON.parse(body).images).toBeTruthy();
+        expect(JSON.parse(body).media).toBeTruthy();
 
         done();
       });

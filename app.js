@@ -40,7 +40,7 @@ seneca = require('seneca')({
   log:'test',
     transport:{
       redis:{
-        timeout:500,
+        timeout:30000,
          url:process.env.REDIS_URL
       }
     }
@@ -98,7 +98,7 @@ seneca.pact(('role:Dummy1,cmd:hello'))
 
            if (err) throw err;
         });
-}, 5000);
+}, 7000);
 
 setInterval(function(){
 seneca.pact(('role:Dummy2,cmd:hello'))
