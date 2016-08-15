@@ -17,10 +17,9 @@ var Promise = require('bluebird');
 // using watchdog to rejoin the mesh network on disconnect
 var watchout = require('watchout');
 
-var watchdog = new watchout(12000, function(haltedTimeout){
-    console.log('I should execute much later.');
-    //rocess.exit(1);
-// rejoin forever :D
+var watchdog = new watchout(12000, function (haltedTimeout) {
+  console.log('I should execute much later.');
+  // rejoin forever :D
   //  seneca  .use('redis-transport').use('mesh',
   // {
   //   listen: [
@@ -37,17 +36,16 @@ var watchdog = new watchout(12000, function(haltedTimeout){
 seneca = require('seneca')({
   timeout: 30000,
   tag: 'batch',
-  log:'test',
-    transport:{
-      redis:{
-        timeout:30000,
-         url:process.env.REDIS_URL
-      }
+  log: 'test',
+  transport: {
+    redis: {
+      timeout: 30000,
+      url: process.env.REDIS_URL
     }
-  // transport: {host: '46.137.168.242'}
-}) .use('redis-transport')
- .client({type:'redis'})
-   .listen({type:'redis'})
+  }
+}).use('redis-transport')
+  .client({ type: 'redis' })
+  .listen({ type: 'redis' })
 // .use('mesh',
 //   {
 //     listen: [
@@ -59,56 +57,45 @@ seneca = require('seneca')({
 //     //  host: 'ir-seneca-batch.herokuapp.com'
 //   })
 
+// promisifing seneca act method
 seneca.pact = Promise.promisify(seneca.act, { context: seneca });
 
 // first reset it before running 
-setTimeout(function(){
+setTimeout(function () {
   watchdog.reset();
-},3000);
+}, 3000);
 
-seneca.add({role: 'system',cmd: 'watchdog' }, function(args, done){
+seneca.add({ role: 'system', cmd: 'watchdog' }, function (args, done) {
   // when comes from the server reset the watchdog
   watchdog.reset();
   console.log("done reset");
-   done(null,{"cloudinary":this.id});
-    //  seneca.pact('role:Dummy1,cmd:hello').then(function ( result) {
-          
-    //         console.log('Dummy 1 result:', result);
+  done(null, { "cloudinary": this.id });
 
-    //           seneca.pact('role:Dummy2,cmd:hello').then( function ( result2) {
-        
-    //         console.log('Dummy 2 result:', result2);
-          
-    //     });
-    //     }).catch(function(err){
-
-    //        if (err) throw err;
-    //     });
-      
-   
 
 });
 
 
-setInterval(function(){
-seneca.pact(('role:Dummy1,cmd:hello'))
-    .then(function (live) {
-        console.log("Live Nodes: "+ JSON.stringify( live));
-    }).catch(function(err){
 
-           if (err) throw err;
-        });
-}, 7000);
+// some testing act methods for redis communications with outside services  
+// setInterval(function(){
+// seneca.pact(('role:Dummy1,cmd:hello'))
+//     .then(function (live) {
+//         console.log("Live Nodes: "+ JSON.stringify( live));
+//     }).catch(function(err){
 
-setInterval(function(){
-seneca.pact(('role:Dummy2,cmd:hello'))
-    .then(function (live) {
-        console.log("Live Nodes: "+ JSON.stringify( live));
-    }).catch(function(err){
+//            if (err) throw err;
+//         });
+// }, 7000);
 
-           if (err) throw err;
-        });
-}, 3000);
+// setInterval(function(){
+// seneca.pact(('role:Dummy2,cmd:hello'))
+//     .then(function (live) {
+//         console.log("Live Nodes: "+ JSON.stringify( live));
+//     }).catch(function(err){
+
+//            if (err) throw err;
+//         });
+// }, 3000);
 seneca.use('../bat/cloudinary_clean.js');
 
 
