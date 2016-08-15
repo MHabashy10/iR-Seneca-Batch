@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/cloudinary', function (req, res, next) {
  var type = req.query.type;
-  seneca.pact({ role: 'cloudinary', cmd: 'fetch', type: type }).then(function (val) {
+  seneca.pact({ role: 'cloudinary', cmd: 'fetch'},{ type: type }).then(function (val) {
        // Log the fulfillment value
       //console.log(val.length);
       // compare with the already used media
